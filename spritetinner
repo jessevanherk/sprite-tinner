@@ -1,0 +1,43 @@
+#!/usr/bin/lua
+
+-- Sprite Tinner - command line texture packing program
+-- 
+-- Author: Jesse van Herk <jesse@imaginaryrobots.net>
+-- 
+-- License: MIT.
+-- 
+-- Depends: Lua 5.1+, lua-filesystem
+
+local usage = [[
+Usage: spritetinner <outfile> <imagedir>
+ 
+  This will create a power-of-2 sized PNG image called outfile.png, as
+  well as metadata in outfile.lua, suitable for use by coronaSDK.
+  All images contained in imagedir will be included, NOT recursive.
+
+  Allowed image format is PNG (for now). 
+]]
+
+Packer = require( 'packer' )
+fs = require( 'lfs' )
+
+local allowed_types = { 'png' }
+
+local out_name, image_dir = ...
+
+-- make sure we have the needed params
+if not out_name or not image_dir then
+    print( usage )
+    return 1
+end
+
+local all_images = Packer.findImages( image_dir )
+
+for _, image in ipairs( all_images ) do
+    print( "* " .. image )
+end
+
+
+--spritesheet, metadata = Packer.pack( image_files )
+
+-- done
