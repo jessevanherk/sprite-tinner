@@ -28,23 +28,24 @@ There aren't very many dependencies, and they are easy to install!
 
 On an Ubuntu system, you can install these by running:
 
-> sudo apt-get install lua lua-filesystem luarocks
-> sudo luarocks install lua-imlib2
+`sudo apt-get install lua lua-filesystem luarocks`
+
+`sudo luarocks install lua-imlib2`
 
 ## Usage
 
-> spritetinner <outfile> <imagedir>
+> spritetinner outfile imagedir
  
 Outfile should not have an extension - SpriteTinner will add those for you.
 All PNG images contained in imagedir will be included, recursively. 
 
 ### Example:
 
-> spritetinner sprites ./images/source/
+> spritetinner myspritesheet ./images/source/
 
 This will create 2 files:
-* sprites.png - contains all of the sprites in one big image
-* sprites.lua - contains info about each sprite, suitable for use by coronaSDK
+* myspritesheet.png - contains all of the sprites in one big image
+* myspritesheet.lua - contains info about each sprite, suitable for use by coronaSDK
 
 ### Limits
 
@@ -57,9 +58,9 @@ This will create 2 files:
 This is free software released under the MIT license. You can use it for
 almost anything, including commercial projects.
 
-See LICENSE file for full details.
+See the [LICENSE](LICENSE) file for full details.
 
-# Credits
+## Credits
 
 Author: Jesse van Herk <jesse@imaginaryrobots.net>
 
