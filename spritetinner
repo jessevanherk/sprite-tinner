@@ -13,13 +13,14 @@ Usage: spritetinner <outfile> <imagedir>
  
   This will create a power-of-2 sized PNG image called outfile.png, as
   well as metadata in outfile.lua, suitable for use by coronaSDK.
-  All images contained in imagedir will be included, NOT recursive.
+  All images contained in imagedir will be included, recursively.
 
   Allowed image format is PNG (for now). 
 ]]
 
 Packer = require( 'packer' )
 fs = require( 'lfs' )
+io = require( 'io' )
 
 local allowed_types = { 'png' }
 
@@ -31,13 +32,21 @@ if not out_name or not image_dir then
     return 1
 end
 
-local all_images = Packer.findImages( image_dir )
+local packer = Packer()
+local metadata = packer:pack( image_dir )
 
-for _, image in ipairs( all_images ) do
-    print( "* " .. image )
-end
+-- write the sheet metadata file
+local metadata_filename = out_name .. ".lua"
+local metadata_file = io.open( metadata_filename , "w" )
+metadata_file:write( metadata )
+metadata_file:close()
 
+-- write the spritesheet image file
+local sprite_filename = out_name .. ".png"
+packer:writeSheetImage( sprite_filename )
 
---spritesheet, metadata = Packer.pack( image_files )
+print( "Done! Files written:" )
+print( " * " .. sprite_filename )
+print( " * " .. metadata_filename )
 
 -- done
