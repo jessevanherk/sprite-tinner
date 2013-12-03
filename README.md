@@ -1,35 +1,63 @@
-# Sprite Tinner 
+# SpriteTinner 
 
-command line texture packing program for linux.
+This is a simple command line tool to quickly create a spritesheet(texture atlas)
+from all images in a given folder. It outputs one big PNG image containing the sprites,
+and a .lua file containing the metadata for indexing them.
 
-# Overview
+SpriteTinner can replace a more complex tool like TexturePacker, especially if you
+only need a basic spritesheet.
 
-This is a simple command line tool to create a spritesheet(texture atlas)
-from all images in a given folder. It outputs a .lua file by default, which
-should be compatible with the Corona SDK.
+The metadata file is compatible with CoronaSDK. 
 
-# Installation
+## Installation
 
-## Requirements
+### Download SpriteTinner
 
-Requires 
-* lua 5.1 or higher
+Official releases are hosted on [github](https://github.com/jessevanherk/sprite-tinner/),
+along with the latest code.
+
+> git clone https://github.com/jessevanherk/sprite-tinner.git
+
+### Install Dependencies
+
+There aren't very many dependencies, and they are easy to install!
+
+* lua 5.1 (or higher)
 * lua-filesystem
 * imlib2
 
-# Usage
+On an Ubuntu system, you can install these by running:
 
-Usage: spritetinner <outfile> <imagedir>
+> sudo apt-get install lua lua-filesystem luarocks
+> sudo luarocks install lua-imlib2
+
+## Usage
+
+> spritetinner <outfile> <imagedir>
  
-This will create a power-of-2 sized PNG image called outfile.png, as well as
-metadata in outfile.lua, suitable for use by coronaSDK.  All images contained
-in imagedir will be included, recursively. 
+Outfile should not have an extension - SpriteTinner will add those for you.
+All PNG images contained in imagedir will be included, recursively. 
 
-The only allowed image format is PNG (for now). 
+### Example:
 
-# License
+> spritetinner sprites ./images/source/
 
-This is free software released under the MIT license. See LICENSE for details.
+This will create 2 files:
+* sprites.png - contains all of the sprites in one big image
+* sprites.lua - contains info about each sprite, suitable for use by coronaSDK
+
+### Limits
+
+* The only allowed input image format is PNG (for now). 
+* only creates images with power-of-2 sizes. This is on purpose, for older video cards.
+* some graphics cards don't play nicely with large texture atlases. 
+
+## License
+
+This is free software released under the MIT license. You can use it for
+almost anything, including commercial projects.
+
+See LICENSE file for full details.
 
 # Credits
 
