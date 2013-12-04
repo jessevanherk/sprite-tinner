@@ -16,7 +16,7 @@ The metadata file is compatible with CoronaSDK.
 Official releases are hosted on [github](https://github.com/jessevanherk/sprite-tinner/),
 along with the latest code.
 
-> git clone https://github.com/jessevanherk/sprite-tinner.git
+> git clone --recursive https://github.com/jessevanherk/sprite-tinner.git
 
 ### Install Dependencies
 
