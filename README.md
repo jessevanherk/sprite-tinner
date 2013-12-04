@@ -20,11 +20,12 @@ along with the latest code.
 
 ### Install Dependencies
 
-There aren't very many dependencies, and they are easy to install!
-
+SpriteTinner depends on:
 * lua 5.1 (or higher)
 * lua-filesystem
+* lua-imlib2
 * imlib2
+* srlua
 
 On an Ubuntu system, you can install these by running:
 
@@ -32,20 +33,37 @@ On an Ubuntu system, you can install these by running:
 
 `sudo luarocks install lua-imlib2`
 
+A pre-built srlua binary is included in this distribution. If that doesn't work,
+you can build your own from here: https://github.com/jessevanherk/srlua
+
+### Build
+
+Start the build by running:
+
+> make 
+
+### Install
+
+Install the binary by running:
+
+> sudo make install
+
+This will install the spritetinner executable into /usr/local/bin. You can
+move it somewhere else if you want. 
+
 ## Usage
 
-> spritetinner outfile imagedir
+> spritetinner spritefile.png metafile.lua imagedir
  
-Outfile should not have an extension - SpriteTinner will add those for you.
 All PNG images contained in imagedir will be included, recursively. 
 
 ### Example:
 
-> spritetinner myspritesheet ./images/source/
+> spritetinner images/myspritesheet.png data/myspritesheet.lua ./images/
 
 This will create 2 files:
-* myspritesheet.png - contains all of the sprites in one big image
-* myspritesheet.lua - contains info about each sprite, suitable for use by coronaSDK
+* images/myspritesheet.png - contains all of the sprites in one big image
+* data/myspritesheet.lua - contains info about each sprite, suitable for use by coronaSDK
 
 ### Limits
 

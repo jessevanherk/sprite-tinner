@@ -6,6 +6,8 @@
 -- 
 -- Depends: Lua 5.1+, lua-filesystem
 
+local version = "1.0.0"
+
 local usage = [[
 Usage: spritetinner <spritefile.png> <metafile.lua> <imagedir>
  
@@ -32,6 +34,7 @@ local image_dir         = arg[ 3 ]
 -- make sure we have the needed params
 if not image_dir then
     print( usage )
+    print( "This is SpriteTinner version " .. version )
     return 1
 end
 
