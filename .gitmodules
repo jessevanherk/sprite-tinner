@@ -1,0 +1,3 @@
+[submodule "srlua"]
+	path = srlua
+	url = https://github.com/jessevanherk/srlua
