@@ -3,8 +3,8 @@
 BIN=spritetinner
 
 LUAC=/usr/bin/luac
-GLUE=./bin/glue
-RUNNER=./bin/srlua
+GLUE=./srlua/glue
+RUNNER=./srlua/srlua
 
 DEST=/usr/local/bin
 
@@ -20,10 +20,14 @@ clean:
 install:
 	install --mode=755 ${BIN} ${DEST}
 
+srlua: FORCE
+	$(MAKE) -C srlua
+
 combine: ${SOURCES}
 	${LUAC} -o ${COMBINED_LUAC} ${SOURCES}
 
-spritetinner: combine
+spritetinner: srlua combine
 	${GLUE} ${RUNNER} ${COMBINED_LUAC} ${BIN}
 	chmod a+x ${BIN}
 
+FORCE:

@@ -25,16 +25,12 @@ SpriteTinner depends on:
 * lua-filesystem
 * lua-imlib2
 * imlib2
-* srlua
 
 On an Ubuntu system, you can install these by running:
 
-`sudo apt-get install lua lua-filesystem luarocks`
+`sudo apt-get install lua5.1 lua-filesystem luarocks libimlib2 libimlib2-dev`
 
 `sudo luarocks install lua-imlib2`
-
-A pre-built srlua binary is included in this distribution. If that doesn't work,
-you can build your own from here: https://github.com/jessevanherk/srlua
 
 ### Build
 
