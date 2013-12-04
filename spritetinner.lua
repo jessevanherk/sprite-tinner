@@ -1,5 +1,3 @@
-#!/usr/bin/lua
-
 -- Sprite Tinner - command line texture packing program
 -- 
 -- Author: Jesse van Herk <jesse@imaginaryrobots.net>
@@ -18,13 +16,18 @@ Usage: spritetinner <outfile> <imagedir>
   Allowed image format is PNG (for now). 
 ]]
 
-Packer = require( 'packer' )
+-- can't load a different chunk by name when compiled together
+if not _G[ 'Packer' ] then
+    Packer = require( 'packer' )
+end
+
 fs = require( 'lfs' )
 io = require( 'io' )
 
 local allowed_types = { 'png' }
 
-local out_name, image_dir = ...
+-- read from arg[] array rather than ... to play nice when compiled
+local out_name, image_dir = arg[ 1 ], arg[ 2 ]
 
 -- make sure we have the needed params
 if not out_name or not image_dir then

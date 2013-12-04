@@ -6,7 +6,9 @@ https://github.com/jakesgordon/bin-packing/blob/master/js/packer.js
 local imlib2 = require( 'imlib2' )
 local io = require( 'io' )
 
-local Packer = {}
+-- create as global to play nice when compiled.
+Packer = {}
+
 -- hook up the prototype for method calls
 Packer.__index = Packer
 --hook up the meta-table, and set it up to initialize
