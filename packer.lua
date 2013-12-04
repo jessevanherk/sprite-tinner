@@ -28,6 +28,10 @@ local block_template = [[
         y = %u,
         width = %u,
         height = %u,
+        sourceX = %u,
+        sourceY = %u,
+        sourceWidth = %u,
+        sourceHeight = %u,
     },
 ]] 
 local sheet_template = [[
@@ -61,7 +65,6 @@ return SheetInfo
 -- user can pass in a starting width and height to use
 function Packer:_init( width, height )
     self.default_size = 512
-    self.padding = 2  -- how much extra space to leave between images
     self.sprites_image = nil
     self.root = {}
 end
@@ -142,9 +145,9 @@ function Packer:buildSheetFile( blocks )
 
     for i, block in ipairs( blocks ) do
         -- fill in that block's text
-        -- remember to remove padding 
         local block_text = string.format( block_template, block.name,
-                       block.x, block.y, block.width - self.padding, block.height - self.padding )
+                       block.x, block.y, block.width, block.height,
+                       block.source_x, block.source_y, block.source_width, block.source_height )
         table.insert( block_texts, block_text )
 
         -- fill in that frame's text, so blocks can be fetched by name
@@ -194,15 +197,20 @@ function Packer:loadImageBlocks( image_files )
     local blocks = {}
     for _, file_path in ipairs( image_files ) do
         local image  = imlib2.image.load( file_path )
-        local width  = image:get_width() + self.padding
-        local height = image:get_height() + self.padding
+        local width  = image:get_width()
+        local height = image:get_height()
         local name   = string.gmatch( file_path, ".*/(.+)%.(%w+)" )()
+        -- FIXME: trim excess blank space automatically
         local block = {
             filename = file_path,
             name  = name,
             image = image,
             width = width,
             height = height,
+            source_x = 0,
+            source_y = 0,
+            source_width = width,
+            source_height = height,
         }
         table.insert( blocks, block )
     end
