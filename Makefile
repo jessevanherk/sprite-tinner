@@ -20,11 +20,6 @@ clean:
 install:
 	install --mode=755 ${BIN} ${DEST}
 
-%.luac: %.lua
-	${LUAC} -o $@ $<
-
-#combine: ${OBJECTS}
-#	cat ${OBJECTS} > ${COMBINED_LUAC}
 combine: ${SOURCES}
 	${LUAC} -o ${COMBINED_LUAC} ${SOURCES}
 

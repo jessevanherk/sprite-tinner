@@ -7,10 +7,10 @@
 -- Depends: Lua 5.1+, lua-filesystem
 
 local usage = [[
-Usage: spritetinner <outfile> <imagedir>
+Usage: spritetinner <spritefile.png> <metafile.lua> <imagedir>
  
-  This will create a power-of-2 sized PNG image called outfile.png, as
-  well as metadata in outfile.lua, suitable for use by coronaSDK.
+  This will create a power-of-2 sized PNG image called spritefile.png,
+  as well as metadata in metafile.lua, suitable for use by coronaSDK.
   All images contained in imagedir will be included, recursively.
 
   Allowed image format is PNG (for now). 
@@ -24,13 +24,13 @@ end
 fs = require( 'lfs' )
 io = require( 'io' )
 
-local allowed_types = { 'png' }
-
 -- read from arg[] array rather than ... to play nice when compiled
-local out_name, image_dir = arg[ 1 ], arg[ 2 ]
+local sprite_filename   = arg[ 1 ]
+local metadata_filename = arg[ 2 ]
+local image_dir         = arg[ 3 ]
 
 -- make sure we have the needed params
-if not out_name or not image_dir then
+if not image_dir then
     print( usage )
     return 1
 end
@@ -39,13 +39,11 @@ local packer = Packer()
 local metadata = packer:pack( image_dir )
 
 -- write the sheet metadata file
-local metadata_filename = out_name .. ".lua"
 local metadata_file = io.open( metadata_filename , "w" )
 metadata_file:write( metadata )
 metadata_file:close()
 
 -- write the spritesheet image file
-local sprite_filename = out_name .. ".png"
 packer:writeSheetImage( sprite_filename )
 
 print( "Done! Files written:" )
