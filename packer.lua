@@ -46,8 +46,17 @@ SheetInfo.frameIndex =
 {
     %s
 }
-]]
 
+function SheetInfo:getSheet()
+    return self.sheet;
+end
+
+function SheetInfo:getFrameIndex( name )
+    return self.frameIndex[ name ];
+end
+
+return SheetInfo
+]]
 
 -- user can pass in a starting width and height to use
 function Packer:_init( width, height )
