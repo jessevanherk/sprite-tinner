@@ -207,6 +207,8 @@ function Packer:loadImageBlocks( image_files )
             image = image,
             width = width,
             height = height,
+            padded_width = width + 1,
+            padded_height = height + 1,
             source_x = 0,
             source_y = 0,
             source_width = width,
@@ -231,26 +233,25 @@ function Packer:sortBlocks( blocks )
     return working
 end
 
--- FIXME: see if these actually work!
 -- build a binary tree to contain all of our image blocks.
 -- returns a copy of the blocks array, with fit info inside.
 function Packer:fitBlocks( blocks )
     -- copy blocks into working array
-    -- FIXME: use deep copy or clone!
     local working_blocks = {}
     for _, block in ipairs( blocks ) do
+
         table.insert( working_blocks, block )
     end
 
     -- fit the rest of the blocks
     for _, block in ipairs( working_blocks ) do
-        local node = self:findNode( self.root, block.width, block.height )
+        local node = self:findNode( self.root, block.padded_width, block.padded_height )
         if node then  -- found a spot for it
             -- fit it
             block.x = node.x
             block.y = node.y
             -- split it
-            self:splitNode( node, block.width, block.height )
+            self:splitNode( node, block.padded_width, block.padded_height )
         else
             return nil -- can't fit, give up.
         end
