@@ -348,8 +348,8 @@ function Packer:getCroppedSize( source_image )
     -- get the new crop dimensions
     local left, right = self:getVerticalCrop( source_image )
     source_image:orientate( 3 ) -- rotate back to normal
-    local width  = right - left
-    local height = bottom - top
+    local width  = right - left + 1
+    local height = bottom - top + 1
 
     return left, top, width, height
 end
