@@ -6,7 +6,7 @@
 -- 
 -- Depends: Lua 5.1+, lua-filesystem
 
-local version = "1.0.3"
+local version = "1.1.0"
 
 local usage = [[
 Usage: spritetinner <spritefile.png> <metafile.lua> <imagedir>

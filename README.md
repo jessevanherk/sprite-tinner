@@ -7,7 +7,8 @@ and a .lua file containing the metadata for indexing them.
 SpriteTinner can replace a more complex tool like TexturePacker, especially if you
 only need a basic spritesheet.
 
-The metadata file is compatible with CoronaSDK. 
+Sprites will have extra transparency removed to pack in tighter, with the original
+sizes listed in the metadata file.  The metadata file is compatible with CoronaSDK.
 
 ## Installation
 

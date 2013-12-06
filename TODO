@@ -1,1 +1,2 @@
 * allow for non-PNG input files (SVG)
+* add switch to output metadata as a JSON file instead
