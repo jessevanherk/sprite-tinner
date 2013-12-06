@@ -124,7 +124,7 @@ function Packer:createSheetImage( blocks )
     sheet_image:set_has_alpha( true ) -- the docs lie about this function's name.
     
     for _, block in ipairs( blocks ) do
-        self:stampImage( block.image, sheet_image, block.x, block.y )
+        self:stampBlock( block, sheet_image, block.x, block.y )
     end
 
     return sheet_image
@@ -196,27 +196,34 @@ end
 function Packer:loadImageBlocks( image_files )
     local blocks = {}
     for _, file_path in ipairs( image_files ) do
-        local image  = imlib2.image.load( file_path )
-        local width  = image:get_width()
-        local height = image:get_height()
-        local name   = string.gmatch( file_path, ".*/(.+)%.(%w+)" )()
-        -- FIXME: trim excess blank space automatically
-        local block = {
-            filename = file_path,
-            name  = name,
-            image = image,
-            width = width,
-            height = height,
-            padded_width = width + 1,
-            padded_height = height + 1,
-            source_x = 0,
-            source_y = 0,
-            source_width = width,
-            source_height = height,
-        }
+        local block = self:createBlock( file_path )
         table.insert( blocks, block )
     end
     return blocks
+end
+
+function Packer:createBlock( file_path )
+    local image  = imlib2.image.load( file_path )
+    local name   = string.gmatch( file_path, ".*/(.+)%.(%w+)" )()
+    local source_width  = image:get_width()
+    local source_height = image:get_height()
+
+    local left, top, width, height = self:getCroppedSize( image )
+
+    local block = {
+        filename = file_path,
+        name  = name,
+        image = image,
+        width = width,
+        height = height,
+        padded_width = width + 1,
+        padded_height = height + 1,
+        source_x = left,
+        source_y = top,
+        source_width = source_width,
+        source_height = source_height,
+    }
+    return block
 end
 
 -- sortBlocks( blocks )
@@ -302,31 +309,88 @@ function Packer:splitNode( node, width, height )
     return node
 end
 
--- stampImage( source_image, target_image, left, top )
+-- stampBlock( block, target_image, left, top )
 -- because the lua imlib2 binding doesn't seem to have a way to
 -- combine images, do it manually pixel-by-pixel.
 -- <left, top> are the coordinates where we want to copy the source image to.
 -- modifies target_image in-place
-function Packer:stampImage( source_image, target_image, left, top )
-    local source_width = source_image:get_width()
-    local source_height = source_image:get_height()
+function Packer:stampBlock( block, target_image, left, top )
+    local source_image = block.image
 
     local target_width = target_image:get_width()
     local target_height = target_image:get_height()
 
-    if left + source_width > target_width or 
-       top + source_height > target_height then
-            print( "source image is too big for target, won't continue." )
+    if left + block.width > target_width or 
+       top + block.height > target_height then
+            print( "block is too big for target, won't continue." )
             return nil
     end
 
-    for y = 0, source_height - 1 do
-        for x = 0, source_width - 1 do
-            local colour = source_image:get_pixel( x, y )
-            target_image:draw_pixel( left + x, top + y, colour )
+    for j = 0, block.height - 1 do
+        for i = 0, block.width - 1 do
+            local source_x = block.source_x + i
+            local source_y = block.source_y + j
+            local colour = source_image:get_pixel( source_x, source_y )
+            target_image:draw_pixel( left + i, top + j, colour )
         end
     end
 end
+
+-- calculate the cropped size of the given image. 
+-- only fully transparent areas are cropped. 
+-- won't get fooled by interior transparency - stops at perimeter.
+function Packer:getCroppedSize( source_image )
+    local source_width = source_image:get_width()
+    local source_height = source_image:get_height()
+
+    local top, bottom = self:getVerticalCrop( source_image )
+    source_image:orientate( 1 ) -- rotate 90 degrees
+    -- get the new crop dimensions
+    local left, right = self:getVerticalCrop( source_image )
+    source_image:orientate( 3 ) -- rotate back to normal
+    local width  = right - left
+    local height = bottom - top
+
+    return left, top, width, height
+end
+
+function Packer:getVerticalCrop( source_image )
+    local source_width = source_image:get_width()
+    local source_height = source_image:get_height()
+
+    local top    = 0
+    local bottom = source_height - 1
+
+    -- scan from the top until we find a non-empty row
+    -- at the same time, scan from the bottom upward doing the same thing
+    local is_top_done = false
+    local is_bottom_done = false
+    for y = 0, source_height - 1 do
+        local anti_y = ( source_height - 1 ) - y
+        for x = 0, source_width - 1 do
+            if not is_top_done then
+                local top_colour = source_image:get_pixel( x, y )
+                if top_colour.alpha ~= 0 then  -- non-transparent
+                    is_top_done = true
+                end
+                top = y  
+            end
+            if not is_bottom_done then
+                local bottom_colour = source_image:get_pixel( x, anti_y )
+                if bottom_colour.alpha ~= 0 then  -- non-transparent
+                    is_bottom_done = true
+                end
+                bottom = anti_y  
+            end
+        end
+        if is_top_done and is_bottom_done then
+            break -- quit scanning early!
+        end
+    end
+
+    return top, bottom
+end
+
 
 return Packer
 
