@@ -229,6 +229,7 @@ end
 -- sortBlocks( blocks )
 -- given a table of blocks, each with a width and height entry,
 -- return the blocks sorted from biggest to smallest. 
+-- sort by height, then by width, then by filename (to be deterministic and repeatable)
 -- sort only on height for now.
 function Packer:sortBlocks( blocks )
     -- copy into a temporary table since table.sort operates in-place
@@ -236,7 +237,17 @@ function Packer:sortBlocks( blocks )
     for _, block in ipairs( blocks ) do
         table.insert( working, block )
     end
-    table.sort( working, function( a, b ) return a.height > b.height end )
+    table.sort( working, function( a, b )
+        if a.height == b.height then
+            if a.width == b.width then
+                return a.filename > b.filename
+            else
+                return a.width > b.width
+            end
+        else
+            return a.height > b.height 
+        end
+    end )
     return working
 end
 
