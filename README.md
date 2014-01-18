@@ -50,17 +50,17 @@ move it somewhere else if you want.
 
 ## Usage
 
-> spritetinner \[-nc\] \[-h\] \[-p<spritefile.png>\] \[-m<metafile.lua>\] -i<imagedir>
+> spritetinner \[-nc\] \[-h\] \[-p spritefile.png\] \[-m metafile.lua\] -i imagedir
  
   This will create a power-of-2 sized PNG image called spritefile.png,
   as well as metadata in metafile.lua, suitable for use by coronaSDK.
 
-  OPTIONS:
-  -i: source image directory to parse. required.
-  -p: filename for output PNG file. default is output.png
-  -m: filename for output lua metadata file. default is output.lua
-  -nc: no autocropping of sprites, images used at full size
-  -h: show this help
+###OPTIONS:
+- i: source image directory to parse. required.
+- p: filename for output PNG file. default is output.png
+- m: filename for output lua metadata file. default is output.lua
+- nc: no autocropping of sprites, images used at full size
+- h: show this help
 
 All PNG images contained in imagedir will be included, recursively. 
 

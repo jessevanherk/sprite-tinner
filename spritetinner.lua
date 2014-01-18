@@ -9,7 +9,7 @@
 local version = "1.2.0"
 
 local usage = [[
-Usage: spritetinner [-nc] [-h] [-p<spritefile.png>] [-m<metafile.lua>] -i<imagedir>
+Usage: spritetinner [-nc] [-h] [-p spritefile.png] [-m metafile.lua] -i imagedir
  
   This will create a power-of-2 sized PNG image called spritefile.png,
   as well as metadata in metafile.lua, suitable for use by coronaSDK.
