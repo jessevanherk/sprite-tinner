@@ -50,13 +50,23 @@ move it somewhere else if you want.
 
 ## Usage
 
-> spritetinner spritefile.png metafile.lua imagedir
+> spritetinner \[-nc\] \[-h\] \[-p<spritefile.png>\] \[-m<metafile.lua>\] -i<imagedir>
  
+  This will create a power-of-2 sized PNG image called spritefile.png,
+  as well as metadata in metafile.lua, suitable for use by coronaSDK.
+
+  OPTIONS:
+  -i: source image directory to parse. required.
+  -p: filename for output PNG file. default is output.png
+  -m: filename for output lua metadata file. default is output.lua
+  -nc: no autocropping of sprites, images used at full size
+  -h: show this help
+
 All PNG images contained in imagedir will be included, recursively. 
 
 ### Example:
 
-> spritetinner images/myspritesheet.png data/myspritesheet.lua ./images/
+> spritetinner -pimages/myspritesheet.png -mdata/myspritesheet.lua -i./images/
 
 This will create 2 files:
 * images/myspritesheet.png - contains all of the sprites in one big image
@@ -64,7 +74,7 @@ This will create 2 files:
 
 ### Limits
 
-* The only allowed input image format is PNG (for now). 
+* The only allowed input image format is PNG. 
 * only creates images with power-of-2 sizes. This is on purpose, for older video cards.
 * some graphics cards don't play nicely with large texture atlases. 
 
