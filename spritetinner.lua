@@ -9,7 +9,7 @@
 local version = "1.2.0"
 
 local usage = [[
-Usage: spritetinner [-n] [-h] [-p<spritefile.png>] [-m<metafile.lua>] -i<imagedir>
+Usage: spritetinner [-nc] [-h] [-p<spritefile.png>] [-m<metafile.lua>] -i<imagedir>
  
   This will create a power-of-2 sized PNG image called spritefile.png,
   as well as metadata in metafile.lua, suitable for use by coronaSDK.
@@ -19,7 +19,7 @@ Usage: spritetinner [-n] [-h] [-p<spritefile.png>] [-m<metafile.lua>] -i<imagedi
   -i: source image directory to parse. required.
   -p: filename for output PNG file. default is output.png
   -m: filename for output lua metadata file. default is output.lua
-  -n: no autocropping of sprites, includes transparent borders
+  -nc: no autocropping of sprites, images used at full size
   -h: show this help
 
   Allowed input image format is PNG. 

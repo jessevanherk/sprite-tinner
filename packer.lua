@@ -254,7 +254,7 @@ function Packer:sortBlocks( blocks )
     table.sort( working, function( a, b )
         if a.height == b.height then
             if a.width == b.width then
-                return a.filename > b.filename
+                return a.filename < b.filename
             else
                 return a.width > b.width
             end
