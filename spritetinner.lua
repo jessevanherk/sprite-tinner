@@ -75,7 +75,7 @@ local options = getopt( arg, "himnp" )
 local sprite_filename   = options[ 'p' ] or 'output.png'
 local metadata_filename = options[ 'm' ] or 'output.lua'
 local image_dir         = options[ 'i' ]
-local do_crop = not options[ 'z' ]
+local no_crop = options[ 'n' ] == 'c'
 local show_help = options[ 'h' ]
 
 -- make sure we have the needed params
@@ -85,10 +85,11 @@ if show_help or not image_dir then
     return 1
 end
 
-local packer = Packer()
-local metadata = packer:pack( image_dir )
+local packer = Packer( not no_crop )
+packer:pack( image_dir )
 
 -- write the sheet metadata file
+local metadata = packer:getMetadata()
 local metadata_file = io.open( metadata_filename , "w" )
 metadata_file:write( metadata )
 metadata_file:close()

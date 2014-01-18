@@ -63,10 +63,16 @@ return SheetInfo
 ]]
 
 -- user can pass in a starting width and height to use
-function Packer:_init( width, height )
+function Packer:_init( crop_transparent )
     self.default_size = 512
     self.sprites_image = nil
     self.root = {}
+
+    -- slightly weird code to handle option that defaults true 
+    self.crop_transparent = true
+    if crop_transparent ~= nil then
+        self.crop_transparent = crop_transparent
+    end
 end
 
 -- primary call. 
@@ -106,11 +112,14 @@ function Packer:pack( image_dir )
     end
 
     -- create the metadata file
-    local metadata = self:buildSheetFile( fitted_blocks )
+    self.metadata = self:buildSheetFile( fitted_blocks )
     -- create the output image data
     self.sprites_image = self:createSheetImage( fitted_blocks )
+end
 
-    return metadata
+-- method to make metadata retrieval more similar to image data retrieval
+function Packer:getMetadata()
+    return self.metadata or ''
 end
 
 -- createSheetImage( blocks )
@@ -208,7 +217,12 @@ function Packer:createBlock( file_path )
     local source_width  = image:get_width()
     local source_height = image:get_height()
 
-    local left, top, width, height = self:getCroppedSize( image )
+    local left, top, width, height
+    if self.crop_transparent then
+        left, top, width, height = self:getCroppedSize( image )
+    else
+        left, top, width, height = self:getOriginalSize( image )
+    end
 
     local block = {
         filename = file_path,
@@ -345,6 +359,12 @@ function Packer:stampBlock( block, target_image, left, top )
             target_image:draw_pixel( left + i, top + j, colour )
         end
     end
+end
+
+function Packer:getOriginalSize( source_image )
+    local width = source_image:get_width()
+    local height = source_image:get_height()
+    return 0, 0, width, height
 end
 
 -- calculate the cropped size of the given image. 
