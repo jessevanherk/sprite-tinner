@@ -64,7 +64,7 @@ return SheetInfo
 
 -- user can pass in a starting width and height to use
 function Packer:_init( crop_transparent )
-    self.default_size = 512
+    self.default_size = 256
     self.sprites_image = nil
     self.root = {}
 

@@ -8,7 +8,8 @@ SpriteTinner can replace a more complex tool like TexturePacker, especially if y
 only need a basic spritesheet.
 
 Sprites will have extra transparency removed to pack in tighter, with the original
-sizes listed in the metadata file.  The metadata file is compatible with CoronaSDK.
+sizes listed in the metadata file.  The metadata file is compatible with CoronaSDK,
+and it very easy to use with the LOVE game framework.
 
 ## Installation
 
