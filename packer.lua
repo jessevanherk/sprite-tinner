@@ -33,7 +33,7 @@ local block_template = [[
         sourceWidth = %u,
         sourceHeight = %u,
     },
-]] 
+]]
 local sheet_template = [[
 local SheetInfo = {}
 
@@ -68,17 +68,15 @@ function Packer:_init( crop_transparent )
     self.sprites_image = nil
     self.root = {}
 
-    -- slightly weird code to handle option that defaults true 
+    -- slightly weird code to handle option that defaults true
     self.crop_transparent = true
     if crop_transparent ~= nil then
         self.crop_transparent = crop_transparent
     end
 end
 
--- primary call. 
+-- primary call.
 function Packer:pack( image_dir )
-    local sprites_image, metadata
-
     local image_files = Packer:findImages( image_dir )
     local blocks = self:loadImageBlocks( image_files )
 
@@ -95,7 +93,7 @@ function Packer:pack( image_dir )
         print( "trying to fit in size " .. try_width .. "x" .. try_height )
         -- reset the root.
         self.root = {
-            x = 0, 
+            x = 0,
             y = 0,
             width  = try_width,
             height = try_height,
@@ -131,7 +129,7 @@ function Packer:createSheetImage( blocks )
     sheet_image:clear()  -- blank it out - could be garbage memory otherwise
     sheet_image:set_format( 'png' )
     sheet_image:set_has_alpha( true ) -- the docs lie about this function's name.
-    
+
     for _, block in ipairs( blocks ) do
         self:stampBlock( block, sheet_image, block.x, block.y )
     end
@@ -146,7 +144,7 @@ function Packer:writeSheetImage( filename )
 end
 
 -- buildSheetFile( blocks )
--- create the text for the metadata file describing the blocks and their 
+-- create the text for the metadata file describing the blocks and their
 -- positions in the sheet.
 function Packer:buildSheetFile( blocks )
     local block_texts = {}
@@ -166,7 +164,7 @@ function Packer:buildSheetFile( blocks )
     end
     local all_blocks = table.concat( block_texts )
     local all_frames = table.concat( frame_texts )
-    local content = string.format( sheet_template, 
+    local content = string.format( sheet_template,
                         all_blocks, self.root.width, self.root.height, all_frames )
     return content
 end
@@ -242,7 +240,7 @@ end
 
 -- sortBlocks( blocks )
 -- given a table of blocks, each with a width and height entry,
--- return the blocks sorted from biggest to smallest. 
+-- return the blocks sorted from biggest to smallest.
 -- sort by height, then by width, then by filename (to be deterministic and repeatable)
 -- sort only on height for now.
 function Packer:sortBlocks( blocks )
@@ -259,7 +257,7 @@ function Packer:sortBlocks( blocks )
                 return a.width > b.width
             end
         else
-            return a.height > b.height 
+            return a.height > b.height
         end
     end )
     return working
@@ -295,16 +293,16 @@ end
 -- find a node in the binary tree that is big enough to hold a block
 -- with the given width and height.
 -- returns a node table
-function Packer:findNode( parent, width, height ) 
+function Packer:findNode( parent, width, height )
     local node = nil
-    if parent.used then  
+    if parent.used then
         -- check the right sub-tree
-        node = self:findNode( parent.right, width, height ) 
+        node = self:findNode( parent.right, width, height )
         if not node then -- no luck
-            -- check the down sub-tree 
+            -- check the down sub-tree
             node = self:findNode( parent.down, width, height )
         end
-    elseif width <= parent.width and height <= parent.height then -- make sure it fits 
+    elseif width <= parent.width and height <= parent.height then -- make sure it fits
         node = parent
     end
 
@@ -317,7 +315,7 @@ end
 -- returns a node table
 function Packer:splitNode( node, width, height )
     node.used = true
-    -- create the right sub-node. 
+    -- create the right sub-node.
     node.right = {
         x = node.x + width,
         y = node.y,
@@ -345,7 +343,7 @@ function Packer:stampBlock( block, target_image, left, top )
     local target_width = target_image:get_width()
     local target_height = target_image:get_height()
 
-    if left + block.width > target_width or 
+    if left + block.width > target_width or
        top + block.height > target_height then
             print( "block is too big for target, won't continue." )
             return nil
@@ -367,13 +365,10 @@ function Packer:getOriginalSize( source_image )
     return 0, 0, width, height
 end
 
--- calculate the cropped size of the given image. 
--- only fully transparent areas are cropped. 
+-- calculate the cropped size of the given image.
+-- only fully transparent areas are cropped.
 -- won't get fooled by interior transparency - stops at perimeter.
 function Packer:getCroppedSize( source_image )
-    local source_width = source_image:get_width()
-    local source_height = source_image:get_height()
-
     local top, bottom = self:getVerticalCrop( source_image )
     source_image:orientate( 1 ) -- rotate 90 degrees
     -- get the new crop dimensions
@@ -404,14 +399,14 @@ function Packer:getVerticalCrop( source_image )
                 if top_colour.alpha ~= 0 then  -- non-transparent
                     is_top_done = true
                 end
-                top = y  
+                top = y
             end
             if not is_bottom_done then
                 local bottom_colour = source_image:get_pixel( x, anti_y )
                 if bottom_colour.alpha ~= 0 then  -- non-transparent
                     is_bottom_done = true
                 end
-                bottom = anti_y  
+                bottom = anti_y
             end
         end
         if is_top_done and is_bottom_done then

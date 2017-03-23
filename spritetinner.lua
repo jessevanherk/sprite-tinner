@@ -1,16 +1,16 @@
 -- Sprite Tinner - command line texture packing program
--- 
+--
 -- Author: Jesse van Herk <jesse@imaginaryrobots.net>
--- 
+--
 -- License: MIT.
--- 
+--
 -- Depends: Lua 5.1+, lua-filesystem
 
 local version = "1.2.1"
 
 local usage = [[
 Usage: spritetinner [-nc] [-h] [-p spritefile.png] [-m metafile.lua] -i imagedir
- 
+
   This will create a power-of-2 sized PNG image called spritefile.png,
   as well as metadata in metafile.lua, suitable for use by coronaSDK.
   All images contained in imagedir will be included, recursively.
@@ -22,7 +22,7 @@ Usage: spritetinner [-nc] [-h] [-p spritefile.png] [-m metafile.lua] -i imagedir
   -nc: no autocropping of sprites, images used at full size
   -h: show this help
 
-  Allowed input image format is PNG. 
+  Allowed input image format is PNG.
 ]]
 
 -- can't require a different chunk by name when compiled together,
